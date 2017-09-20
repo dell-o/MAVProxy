@@ -16,7 +16,7 @@ import math
 from pymavlink import mavutil, mavwp
 import errno
 import time
-from MAVProxy.modules.mavproxy_example import mavProxyLink_pb2
+from MAVProxy.modules.mavproxy_efls import mavProxyLink_pb2
 
 from MAVProxy.modules.lib import mp_module
 from MAVProxy.modules.lib import mp_util
