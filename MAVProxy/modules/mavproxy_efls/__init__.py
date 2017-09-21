@@ -38,9 +38,11 @@ class efls(mp_module.MPModule):
         self.wps_received = {}
         self.expect_waypoints = 0
         self.timeout = 0
+        self.triggerEFLS = False
+        self.wp_pos = 0
         
         self.seq = 1
-        self.frame = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+        self.frame = 10#mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
         
         self.packets_mytarget = 0
         self.packets_othertarget = 0
@@ -83,7 +85,12 @@ class efls(mp_module.MPModule):
         now = time.time()
         if now-self.last_check > self.check_interval:
             self.last_check = now
-                   
+            
+            # Send Waypoint change command
+            if self.triggerEFLS:
+                self.master.waypoint_set_current_send(self.wp_pos)
+                self.triggerEFLS = False
+            
             self.aircraftFunc()
             self.waypointFunc()
             
@@ -143,28 +150,39 @@ class efls(mp_module.MPModule):
             self.timeout = 0
             
             # Find EFLS do_land_start --> This is the last do_land_start
-            wp_pos = -1
+            self.wp_pos = 0
             for i in range(self.wploader.count()):
                 w_current = self.wploader.wp(i)
                 if w_current.command == mavutil.mavlink.MAV_CMD_DO_LAND_START:
-                    wp_pos = w_current.seq + 1
-            if wp_pos == -1:
+                    self.wp_pos = w_current.seq
+            if self.wp_pos == 0:
                 print 'EFLS: Could not find (Do Land Start) mission item'
                 return
             
             # Removes old waypoints --> Required to ensure if less waypoints are added, old ones do not survive
-            for i in range(wp_pos,self.wploader.count()):
-                 self.wploader.remove(self.wploader.wp(wp_pos))
+            for i in range(self.wp_pos,self.wploader.count()):
+                 self.wploader.remove(self.wploader.wp(i))
            
             # Read waypoints 
-            num = wp_pos
+            num = self.wp_pos
             for Waypoints in aircraft_link_in.waypoints:
                 for Waypoint in Waypoints.waypoint:
                     lat = Waypoint.lat
                     lon = Waypoint.lon
                     alt = Waypoint.altitude
+                    
+                    # Set Do_Land_Start location
+                    if num == self.wp_pos:
+                        m = mavutil.mavlink.MAVLink_mission_item_message(self.target_system, self.target_component, num, self.frame, mavutil.mavlink.MAV_CMD_DO_LAND_START, 0, 1, 0, 0, 0, 0, lat, lon, alt)
+                        
+                    # Set Nav_Land location
+                    elif num == self.wp_pos + len(Waypoints.waypoint) - 1:
+                        m = mavutil.mavlink.MAVLink_mission_item_message(self.target_system, self.target_component, num, self.frame, mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 1, 0, 0, 0, 0, lat, lon, alt)    
+                        
                     # Set waypoints
-                    m = mavutil.mavlink.MAVLink_mission_item_message(self.target_system, self.target_component, num, self.frame, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, lat, lon, alt)
+                    else:
+                        m = mavutil.mavlink.MAVLink_mission_item_message(self.target_system, self.target_component, num, self.frame, mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 1, 0, 0, 0, 0, lat, lon, alt)
+                    
                     self.mpstate.module('wp').wploader.set(m, m.seq)
                     self.master.mav.send(self.mpstate.module('wp').wploader.wp(m.seq))
                     self.mpstate.module('wp').loading_waypoints = True
@@ -178,7 +196,7 @@ class efls(mp_module.MPModule):
             f.close()
             
             # Trigger EFLS landing
-            self.master.waypoint_set_current_send(wp_pos)
+            self.triggerEFLS = True
             
             print 'EFLS: Success'            
                 
