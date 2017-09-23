@@ -160,9 +160,14 @@ class efls(mp_module.MPModule):
                 return
             
             # Removes old waypoints --> Required to ensure if less waypoints are added, old ones do not survive
+            print "start"
+            print self.wp_pos
+            print self.wploader.count()
             for i in range(self.wp_pos,self.wploader.count()):
-                 self.wploader.remove(self.wploader.wp(i))
+                print i
+                self.wploader.remove(self.wploader.wp(i))
            
+            print "finished"
             # Read waypoints 
             num = self.wp_pos
             for Waypoints in aircraft_link_in.waypoints:
