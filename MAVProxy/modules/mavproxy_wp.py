@@ -383,8 +383,8 @@ class WPModule(mp_module.MPModule):
 
     def cmd_wp_movemulti(self, args):
         '''handle wp move of multiple waypoints'''
-        if len(args) < 3:
-            print("usage: wp movemulti WPNUM WPSTART WPEND <rotation>")
+        if len(args) < 4:
+            print("usage: wp movemulti WPNUM WPSTART WPEND <rotation> <newLocation>")
             return
         idx = int(args[0])
         if idx < 1 or idx > self.wploader.count():
@@ -407,15 +407,25 @@ class WPModule(mp_module.MPModule):
             rotation = float(args[3])
         else:
             rotation = 0
-
-        try:
-            latlon = self.module('map').click_position
-        except Exception:
-            print("No map available")
-            return
-        if latlon is None:
-            print("No map click position available")
-            return
+        
+        # optional --> Override mouse click and use a waypoint for the move location instead
+        if len(args) > 4:
+            wpmove = int(args[4])
+            if wpmove < 0 or wpmove > self.wploader.count():
+                print("Invalid wp number %u" % wpmove)
+                return
+            wp = self.wploader.wp(wpmove)
+            latlon = (wp.x, wp.y)
+        else:
+            try:
+                latlon = self.module('map').click_position
+            except Exception:
+                print("No map available")
+                return
+            if latlon is None:
+                print("No map click position available")
+                return
+        
         wp = self.wploader.wp(idx)
         if not self.wploader.is_location_command(wp.command):
             print("WP must be a location command")

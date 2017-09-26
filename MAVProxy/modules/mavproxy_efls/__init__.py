@@ -55,6 +55,10 @@ class efls(mp_module.MPModule):
         self.efls_settings = mp_settings.MPSettings([ ('verbose', bool, False), ])
         self.add_command('efls', self.cmd_efls, "efls module", ['status','set (LOGSETTING)'])
 
+        # Clear waypoint data from Protobuf file initally
+        f = open(self.protocolbuf_in, "wb")
+        f.close()
+        
     def usage(self):
         '''show help on command line options'''
         return "Usage: efls <status|set>"
@@ -163,9 +167,9 @@ class efls(mp_module.MPModule):
             print "start"
             print self.wp_pos
             print self.wploader.count()
-            for i in range(self.wp_pos,self.wploader.count()):
-                print i
-                self.wploader.remove(self.wploader.wp(i))
+            #for i in range(self.wp_pos,self.wploader.count()):
+            #    print i
+            #    self.wploader.remove(self.wploader.wp(i))
            
             print "finished"
             # Read waypoints 
