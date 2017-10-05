@@ -49,8 +49,8 @@ class efls(mp_module.MPModule):
         self.verbose = False
         
         # ToDo - Change paths
-        self.protocolbuf_in = "/home/dello/workspace/EFLS/build/res/protobuf/aircraftLink_medium_waypoints"
-        self.protocolbuf_out = "/home/dello/workspace/EFLS/build/res/protobuf/aircraftLink_medium_aircraft"
+        self.protocolbuf_in = "/home/dello/EFLS/build/res/protobuf/aircraftLink_medium_waypoints"
+        self.protocolbuf_out = "/home/dello/EFLS/build/res/protobuf/aircraftLink_medium_aircraft"
 
         self.efls_settings = mp_settings.MPSettings([ ('verbose', bool, False), ])
         self.add_command('efls', self.cmd_efls, "efls module", ['status','set (LOGSETTING)'])
