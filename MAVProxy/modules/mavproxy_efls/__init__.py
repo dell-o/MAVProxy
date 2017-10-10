@@ -184,6 +184,10 @@ class efls(mp_module.MPModule):
                     if num == self.wp_pos:
                         m = mavutil.mavlink.MAVLink_mission_item_message(self.target_system, self.target_component, num, self.frame, mavutil.mavlink.MAV_CMD_DO_LAND_START, 0, 1, 0, 0, 0, 0, lat, lon, alt)
                         
+                    # Set Nav_Loiter_to_alt
+                    elif num - 1 == self.wp_pos:
+                        m = mavutil.mavlink.MAVLink_mission_item_message(self.target_system, self.target_component, num, self.frame, mavutil.mavlink.MAV_CMD_NAV_LOITER_TO_ALT, 0, 1, 0, 0, 0, 0, lat, lon, alt)
+                        
                     # Set Nav_Land location
                     elif num == self.wp_pos + len(Waypoints.waypoint) - 1:
                         m = mavutil.mavlink.MAVLink_mission_item_message(self.target_system, self.target_component, num, self.frame, mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 1, 0, 0, 0, 0, lat, lon, alt)    
@@ -231,7 +235,7 @@ class efls(mp_module.MPModule):
             self.lon = m.lon * 1e-7
             self.bearing = m.hdg * 1e-2
             self.speed = (m.vx + m.vy) * 1e-2
-            self.altitude = m.relative_alt * 1e-2
+            self.altitude = m.relative_alt * 1e-3
         elif m.get_type() == 'SYS_STATUS':
             self.motor_current = m.current_battery * 1e-2
         elif m.get_type() == 'VFR_HUD':

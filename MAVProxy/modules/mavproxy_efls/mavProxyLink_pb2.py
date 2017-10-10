@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='mavProxyLink.proto',
   package='mav',
   syntax='proto2',
-  serialized_pb=_b('\n\x12mavProxyLink.proto\x12\x03mav\"\xb1\x01\n\x08\x41ircraft\x12\x0b\n\x03lat\x18\x01 \x02(\x01\x12\x0b\n\x03lon\x18\x02 \x02(\x01\x12\x0f\n\x07\x62\x65\x61ring\x18\x03 \x02(\x01\x12\r\n\x05speed\x18\x04 \x02(\x01\x12\x10\n\x08\x61ltitude\x18\x05 \x02(\x01\x12\x12\n\nwind_speed\x18\x06 \x02(\x01\x12\x16\n\x0ewind_direction\x18\x07 \x02(\x01\x12\x15\n\rmotor_current\x18\x08 \x02(\x01\x12\x16\n\x0emotor_throttle\x18\t \x02(\x01\",\n\tWaypoints\x12\x1f\n\x08waypoint\x18\x01 \x03(\x0b\x32\r.mav.Waypoint\"E\n\x08Waypoint\x12\x0b\n\x03lat\x18\x01 \x02(\x01\x12\x0b\n\x03lon\x18\x02 \x02(\x01\x12\x10\n\x08\x61ltitude\x18\x03 \x02(\x01\x12\r\n\x05speed\x18\x04 \x02(\x01\"S\n\x0c\x41ircraftLink\x12 \n\taircrafts\x18\x01 \x03(\x0b\x32\r.mav.Aircraft\x12!\n\twaypoints\x18\x02 \x03(\x0b\x32\x0e.mav.Waypoints')
+  serialized_pb=_b('\n\x12mavProxyLink.proto\x12\x03mav\"\xb1\x01\n\x08\x41ircraft\x12\x0b\n\x03lat\x18\x01 \x02(\x01\x12\x0b\n\x03lon\x18\x02 \x02(\x01\x12\x0f\n\x07\x62\x65\x61ring\x18\x03 \x02(\x01\x12\r\n\x05speed\x18\x04 \x02(\x01\x12\x10\n\x08\x61ltitude\x18\x05 \x02(\x01\x12\x12\n\nwind_speed\x18\x06 \x02(\x01\x12\x16\n\x0ewind_direction\x18\x07 \x02(\x01\x12\x15\n\rmotor_current\x18\x08 \x02(\x01\x12\x16\n\x0emotor_throttle\x18\t \x02(\x01\",\n\tWaypoints\x12\x1f\n\x08waypoint\x18\x01 \x03(\x0b\x32\r.mav.Waypoint\"S\n\x08Waypoint\x12\x0b\n\x03lat\x18\x01 \x02(\x01\x12\x0b\n\x03lon\x18\x02 \x02(\x01\x12\x10\n\x08\x61ltitude\x18\x03 \x02(\x01\x12\r\n\x05speed\x18\x04 \x02(\x01\x12\x0c\n\x04type\x18\x05 \x02(\x05\"S\n\x0c\x41ircraftLink\x12 \n\taircrafts\x18\x01 \x03(\x0b\x32\r.mav.Aircraft\x12!\n\twaypoints\x18\x02 \x03(\x0b\x32\x0e.mav.Waypoints')
 )
 
 
@@ -178,6 +178,13 @@ _WAYPOINT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='type', full_name='mav.Waypoint.type', index=4,
+      number=5, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -191,7 +198,7 @@ _WAYPOINT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=253,
-  serialized_end=322,
+  serialized_end=336,
 )
 
 
@@ -228,8 +235,8 @@ _AIRCRAFTLINK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=324,
-  serialized_end=407,
+  serialized_start=338,
+  serialized_end=421,
 )
 
 _WAYPOINTS.fields_by_name['waypoint'].message_type = _WAYPOINT
